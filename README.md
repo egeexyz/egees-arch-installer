@@ -12,4 +12,11 @@ The install script is self-documenting. Just run `installer.sh --help` or take a
 
 ## Troubleshooting
 
-The most common error is: `fdisk: cannot open /dev/sda: No such file or directory`. This error occurs because the default drive identifier, `sda`, does not exist on your system. Simply override the default by passing in a [correct identifier](https://wiki.archlinux.org/title/fdisk#List_partitions). You can find one by running `fdisk -l` and inspecting the `Device` column.
+`fdisk: cannot open /dev/sda: No such file or directory`
+This error occurs because the default disk identifier, `sda`, does not exist on your system. Simply override the default by passing in a [correct identifier](https://wiki.archlinux.org/title/fdisk#List_partitions). You can find one by running `fdisk -l` and inspecting the `Device` column.
+
+`This disk is currently in use` and `Failed to add|remove partition 1 to system: Device or resource busy`
+These errors typically mean the disk identifier used for the install is mounted or otherwise in use. Simply reboot and try again. If it continues to occur, use fdisk's interactive mode to find out what's going on.
+
+
+
