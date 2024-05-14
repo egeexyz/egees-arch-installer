@@ -37,7 +37,7 @@ add_user() {
   chmod +x /mnt/add_user.sh                                 # Make the script executable
   arch-chroot /mnt /bin/bash -c "/add_user.sh $TARGET_USER" # Run the script with the target user as an argument
   arch-chroot /mnt /bin/bash -c "rm /add_user.sh"           # Delete the script
-  passwd --expire "$TARGET_USER"                            # ...And expire the user's password so they must change it upon log-in
+  arch-chroot /mnt /bin/bash -c "passwd --expire $TARGET_USER"                            # ...And expire the user's password so they must change it upon log-in
 }
 
 help() {
