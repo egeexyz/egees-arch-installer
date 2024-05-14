@@ -22,10 +22,10 @@ bootstrap() {
   arch-chroot /mnt /bin/bash -c "pacman --noconfirm -Sy archlinux-keyring && pacman --noconfirm -Syyu"
   arch-chroot /mnt /bin/bash -c "pacman --noconfirm -Sy syslinux"
   arch-chroot /mnt /bin/bash -c "syslinux-install_update -i -m -a"
-  arch-chroot /mnt /bin/bash -c "sed -i 's/sda3/sda1/' /boot/syslinux/syslinux.cfg"
+  arch-chroot /mnt /bin/bash -c "sed -i 's/sda3/${TARGET_DRIVE}1/' /boot/syslinux/syslinux.cfg"
   arch-chroot /mnt /bin/bash -c "pacman --noconfirm -Sy nano sudo"
-  arch-chroot /mnt /bin/bash -c "sed -i 's/vmlinuz-linux/vmlinuz-linux-lts/' /boot/syslinux/syslinux.cfg"
-  arch-chroot /mnt /bin/bash -c "sed -i 's/initramfs-linux/initramfs-linux-lts/' /boot/syslinux/syslinux.cfg"
+  arch-chroot /mnt /bin/bash -c "sed -i 's/vmlinuz-linux/vmlinuz-linux/' /boot/syslinux/syslinux.cfg"
+  arch-chroot /mnt /bin/bash -c "sed -i 's/initramfs-linux/initramfs-linux/' /boot/syslinux/syslinux.cfg"
   cp /etc/systemd/network/* /mnt/etc/systemd/network/
   arch-chroot /mnt /bin/bash -c "systemctl enable systemd-resolved && systemctl enable systemd-networkd"
 }
