@@ -5,19 +5,17 @@ TARGET_DRIVE="${2:-sda}"
 TARGET_USER="${3:-archy}"
 
 partition() {
-  echo -e "o\nw\n" | fdisk "/dev/${TARGET_DRIVE}"
-  echo -e "n\np\n1\n\n\nw\n" | fdisk "/dev/${TARGET_DRIVE}"
-  mkfs.ext4 "/dev/${TARGET_DRIVE}1"
+  echo -e "o\nw\n" | fdisk "/dev/${TARGET_DRIVE}"           # Create new partition table
+  echo -e "n\np\n1\n\n\nw\n" | fdisk "/dev/${TARGET_DRIVE}" # Create a single partition for install
+  mkfs.ext4 "/dev/${TARGET_DRIVE}1"                         # Create a new ext4 file system
 }
 
 mount_fs() {
-  mount "/dev/${TARGET_DRIVE}1" /mnt
+  mount "/dev/${TARGET_DRIVE}1" /mnt # Mount the drive under /mnt
 }
 
 bootstrap() {
   pacstrap -K /mnt base linux
-  # sudo timedatectl set-timezone "${2:-America/Los_Angeles}"
-  # sudo timedatectl set-ntp true
   arch-chroot /mnt /bin/bash -c "pacman-key --init && pacman-key --populate"
   arch-chroot /mnt /bin/bash -c "pacman --noconfirm -Sy archlinux-keyring && pacman --noconfirm -Syyu"
   arch-chroot /mnt /bin/bash -c "pacman --noconfirm -Sy syslinux"
@@ -37,15 +35,16 @@ add_user() {
   echo -e "${USER_PASSWORD}\n${USER_PASSWORD}" | passwd ${USER_NAME}
   usermod -aG adm ${USER_NAME}
   echo "${USER_NAME} ALL=(ALL:ALL) ALL" > "/etc/sudoers.d/${USER_NAME}"'
-  echo "$add_user_file" > /mnt/add_user.sh
-  chmod +x /mnt/add_user.sh
-  arch-chroot /mnt /bin/bash -c "/add_user.sh $TARGET_USER"
-  arch-chroot /mnt /bin/bash -c "rm /add_user.sh"
+  echo "$add_user_file" > /mnt/add_user.sh                  # Create script to add a new user
+  chmod +x /mnt/add_user.sh                                 # Make the script executable
+  arch-chroot /mnt /bin/bash -c "/add_user.sh $TARGET_USER" # Run the script with the target user as an argument
+  arch-chroot /mnt /bin/bash -c "rm /add_user.sh"           # Delete the script
+  passwd --expire "$TARGET_USER"                            # ...And expire the user's password so they must change it upon log-in
 }
 
 help() {
   echo "Available options:"
-  echo "  install: installs arch linux onto the system"
+  echo "  install: Installs Arch Linux onto local system."
   echo ""
   echo "Example usage:"
   echo "  ./installer.sh install"
