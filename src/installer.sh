@@ -19,8 +19,6 @@ bootstrap() {
   arch-chroot /mnt /bin/bash -c "pacman-key --init && pacman-key --populate"
   arch-chroot /mnt /bin/bash -c "syslinux-install_update -i -m -a"
   arch-chroot /mnt /bin/bash -c "sed -i 's/sda3/${TARGET_DRIVE}1/' /boot/syslinux/syslinux.cfg"
-  arch-chroot /mnt /bin/bash -c "sed -i 's/vmlinuz-linux/vmlinuz-linux/' /boot/syslinux/syslinux.cfg"
-  arch-chroot /mnt /bin/bash -c "sed -i 's/initramfs-linux/initramfs-linux/' /boot/syslinux/syslinux.cfg"
   cp /etc/systemd/network/* /mnt/etc/systemd/network/
   arch-chroot /mnt /bin/bash -c "systemctl enable systemd-resolved && systemctl enable systemd-networkd"
 }
