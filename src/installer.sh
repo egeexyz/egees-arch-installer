@@ -15,9 +15,8 @@ mount_fs() {
 }
 
 bootstrap() {
-  pacstrap -K /mnt base linux syslinux nano sudo
+  pacstrap -K /mnt base linux syslinux nano sudo archlinux-keyring
   arch-chroot /mnt /bin/bash -c "pacman-key --init && pacman-key --populate"
-  arch-chroot /mnt /bin/bash -c "pacman --noconfirm -Sy archlinux-keyring && pacman --noconfirm -Syyu"
   arch-chroot /mnt /bin/bash -c "syslinux-install_update -i -m -a"
   arch-chroot /mnt /bin/bash -c "sed -i 's/sda3/${TARGET_DRIVE}1/' /boot/syslinux/syslinux.cfg"
   arch-chroot /mnt /bin/bash -c "sed -i 's/vmlinuz-linux/vmlinuz-linux/' /boot/syslinux/syslinux.cfg"
@@ -33,11 +32,11 @@ add_user() {
   echo -e "${USER_PASSWORD}\n${USER_PASSWORD}" | passwd ${USER_NAME}
   usermod -aG adm ${USER_NAME}
   echo "${USER_NAME} ALL=(ALL:ALL) ALL" > "/etc/sudoers.d/${USER_NAME}"'
-  echo "$add_user_file" > /mnt/add_user.sh                  # Create script to add a new user
-  chmod +x /mnt/add_user.sh                                 # Make the script executable
-  arch-chroot /mnt /bin/bash -c "/add_user.sh $TARGET_USER" # Run the script with the target user as an argument
-  arch-chroot /mnt /bin/bash -c "rm /add_user.sh"           # Delete the script
-  arch-chroot /mnt /bin/bash -c "passwd --expire $TARGET_USER"                            # ...And expire the user's password so they must change it upon log-in
+  echo "$add_user_file" > /mnt/add_user.sh                     # Create script to add a new user
+  chmod +x /mnt/add_user.sh                                    # Make the script executable
+  arch-chroot /mnt /bin/bash -c "/add_user.sh $TARGET_USER"    # Run the script with the target user as an argument
+  arch-chroot /mnt /bin/bash -c "rm /add_user.sh"              # Delete the script
+  arch-chroot /mnt /bin/bash -c "passwd --expire $TARGET_USER" # ...And expire the user's password so they must change it upon log-in
 }
 
 help() {
