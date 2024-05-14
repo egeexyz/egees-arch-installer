@@ -1,13 +1,11 @@
-# Simple Arch Installer
+# Egee's Arch Installer
 
-Welcome to the Simple Arch Installer repository.
+Welcome to Egee's simple Arch Installer Github repository.
 
-This is a super-simple script that automates manual steps for an Arch Linux install.
+It's a super-simple script that automates the [manual steps](https://wiki.archlinux.org/title/installation_guide) required to install Arch Linux!
 
-It's best used as reference architecture for your own script or if you want to see what a barebones automated Arch install looks like.
+It's best used as reference architecture for your own script. Or if you want to see what a bare-bones automated Arch install looks like.
 
-## Getting Started
+**Caution:** This script should only be executed on a live iso or virtual environment! It automatically deletes and recreates all partitions on the target drive, thus wiping any data that may be stored.
 
-**Caution:** This script should only be executed on a live iso or virtual environment as it automatically deletes and recreates all partitions on the target drive, thus wiping any data that may be stored.
-
-Run the install script from an Arch iso environment simply by cloning this repository and running `bash src/installer.sh`.
+The install script is self-documenting. Just run `installer.sh --help` or take a look at the script to see how it works.
