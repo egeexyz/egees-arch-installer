@@ -15,14 +15,15 @@ mount_fs() {
 }
 
 bootstrap() {
-  pacstrap -K /mnt base linux syslinux nano sudo archlinux-keyring
-  arch-chroot /mnt /bin/bash -c "pacman-key --init && pacman-key --populate"
-  arch-chroot /mnt /bin/bash -c "syslinux-install_update -i -m -a"
-  arch-chroot /mnt /bin/bash -c "sed -i 's/sda3/${TARGET_DRIVE}1/' /boot/syslinux/syslinux.cfg"
-  cp /etc/systemd/network/* /mnt/etc/systemd/network/
-  arch-chroot /mnt /bin/bash -c "systemctl enable systemd-resolved && systemctl enable systemd-networkd"
+  pacstrap -K /mnt base linux syslinux nano sudo                                                         # Install Arch Linux base, bootloader, text editor, and sudo
+  arch-chroot /mnt /bin/bash -c "syslinux-install_update -i -m -a"                                       # Auto-Configure bootloader
+  arch-chroot /mnt /bin/bash -c "sed -i 's/sda3/${TARGET_DRIVE}1/' /boot/syslinux/syslinux.cfg"          # Point bootloader at our filesystem
+  cp /etc/systemd/network/* /mnt/etc/systemd/network/                                                    # Copy live environment's network configuration
+  arch-chroot /mnt /bin/bash -c "systemctl enable systemd-resolved && systemctl enable systemd-networkd" # Enable network services
 }
 
+# This function creates a script and executes it inside the chroot.
+# This step is arguably optional but automating creating a new user can be troublesome, so I left it in.
 add_user() {
   add_user_file='USER_NAME=$1
   USER_PASSWORD=$1
@@ -50,6 +51,8 @@ if [[ $1 == install ]]; then
   mount_fs
   bootstrap
   add_user
+  echo
+  echo "Install complete. Reboot and log-in as $TARGET_USER."
 elif [[ $1 == --help ]]; then
   help
 fi
