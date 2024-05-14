@@ -12,7 +12,7 @@ The install script is self-documenting. Just run `installer.sh --help` or take a
 
 ## Troubleshooting
 
-If you run the script and are unsure how to log in, check the `add_user()` in the script and don't forget to reboot after you run it.
+If you run the script and are unsure how to log in, check the `add_user()` function in the script. And don't forget to reboot after you run it!
 
 `fdisk: cannot open /dev/sda: No such file or directory`
 This error occurs because the default disk identifier, `sda`, does not exist on your system. Simply override the default by passing in a [correct identifier](https://wiki.archlinux.org/title/fdisk#List_partitions). You can find one by running `fdisk -l` and inspecting the `Device` column.
