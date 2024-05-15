@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-# shellcheck disable=SC2016
 set -e
 TARGET_DRIVE="${2:-sda}"
 
@@ -19,7 +18,7 @@ install_os() {
   arch-chroot /mnt /bin/bash -c "sed -i 's/sda3/${TARGET_DRIVE}1/' /boot/syslinux/syslinux.cfg"          # Point bootloader at our filesystem
   cp /etc/systemd/network/* /mnt/etc/systemd/network/                                                    # Copy live environment's network configuration
   arch-chroot /mnt /bin/bash -c "systemctl enable systemd-resolved && systemctl enable systemd-networkd" # Enable network services
-  arch-chroot /mnt /bin/bash -c "echo -e 'changeme\nchangeme' | passwd root"                                     # Set password for root
+  arch-chroot /mnt /bin/bash -c "echo -e 'changeme\nchangeme' | passwd root"                             # Set password for root
 }
 
 help() {
