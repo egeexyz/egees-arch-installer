@@ -4,13 +4,13 @@ Welcome to Egee's simple Arch Installer Github repository.
 
 It's a super-simple script that automates the [manual steps](https://wiki.archlinux.org/title/installation_guide) required to install Arch Linux!
 
-It's best used as reference architecture for your own script. Or, for if you want to see what a bare-bones automated Arch install looks like.
+It's best used as reference architecture for your own script. Or, for if you want to see what a bare-bones automated Arch install looks like.+
+
+The resulting system installed from this script is tiny: 1.2gb installed and about 250mb of memory used at idle.
 
 ## How Does It Work?
 
-It partitions a drive (sda1 by default), mounts it, and runs a series of pacstrap and arch-chroot commands to configure the system.
-
-It uses syslinux for the bootloader and systemd for networking.
+It partitions a drive (sda1 by default), mounts it, and runs a series of pacstrap and arch-chroot commands to configure the system. Uses syslinux for the bootloader and systemd for networking.
 
 Feel free to submit PRs or fork this repository and build your own script from this one.
 
