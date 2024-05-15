@@ -2,7 +2,6 @@
 # shellcheck disable=SC2016
 set -e
 TARGET_DRIVE="${2:-sda}"
-TARGET_USER="${3:-archy}"
 
 partition() {
   echo -e "o\nw\n" | fdisk "/dev/${TARGET_DRIVE}"                                                        # Create new partition table
@@ -14,28 +13,13 @@ mount_fs() {
   mount "/dev/${TARGET_DRIVE}1" /mnt # Mount the drive under /mnt
 }
 
-bootstrap() {
+install_os() {
   pacstrap -K /mnt base linux syslinux nano sudo                                                         # Install Arch Linux base, bootloader, text editor, and sudo
   arch-chroot /mnt /bin/bash -c "syslinux-install_update -i -m -a"                                       # Auto-Configure bootloader
   arch-chroot /mnt /bin/bash -c "sed -i 's/sda3/${TARGET_DRIVE}1/' /boot/syslinux/syslinux.cfg"          # Point bootloader at our filesystem
   cp /etc/systemd/network/* /mnt/etc/systemd/network/                                                    # Copy live environment's network configuration
   arch-chroot /mnt /bin/bash -c "systemctl enable systemd-resolved && systemctl enable systemd-networkd" # Enable network services
-}
-
-# This function creates a script and executes it inside the chroot.
-# This step is arguably optional but automating creating a new user can be troublesome, so I left it in.
-add_user() {
-  add_user_file='USER_NAME=$1
-  USER_PASSWORD=$1
-  useradd -m -s /bin/bash ${USER_NAME}
-  echo -e "${USER_PASSWORD}\n${USER_PASSWORD}" | passwd ${USER_NAME}
-  usermod -aG adm ${USER_NAME}
-  echo "${USER_NAME} ALL=(ALL:ALL) ALL" > "/etc/sudoers.d/${USER_NAME}"'
-  echo "$add_user_file" > /mnt/add_user.sh                                                               # Create script to add a new user
-  chmod +x /mnt/add_user.sh                                                                              # Make the script executable
-  arch-chroot /mnt /bin/bash -c "/add_user.sh $TARGET_USER"                                              # Run the script with the target user as an argument
-  arch-chroot /mnt /bin/bash -c "rm /add_user.sh"                                                        # Delete the script
-  arch-chroot /mnt /bin/bash -c "passwd --expire $TARGET_USER"                                           # Expire the user's password so they must change it upon log-in
+  arch-chroot /mnt /bin/bash -c "echo -e 'changeme\nchangeme' | passwd root"                                     # Set password for root
 }
 
 help() {
@@ -49,10 +33,9 @@ help() {
 if [[ $1 == install ]]; then
   partition
   mount_fs
-  bootstrap
-  add_user
+  install_os
   echo
-  echo "Install complete. Reboot and log-in as $TARGET_USER."
+  echo "Install complete. Reboot and log in."
 elif [[ $1 == --help ]]; then
   help
 fi
