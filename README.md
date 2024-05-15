@@ -1,6 +1,6 @@
 # Egee's Arch Installer
 
-Welcome to Egee's simple Arch Installer Github repository.
+Welcome to Egee's simple Arch Linux fully-automated installer Github repository.
 
 It's a super-simple script that automates the [manual steps](https://wiki.archlinux.org/title/installation_guide) required to install Arch Linux! The resulting system installed from this script is tiny: 1.2gb installed and about 250mb of memory used at idle.
 
